@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  bot:
+    build:
+      context: .              
+      dockerfile: Dockerfile  
+    container_name: idia27-bot
+    environment:
+      - DISCORD_CLIENT_ID
+      - DISCORD_TOKEN
+    volumes:
+      - tona-db-data:/app/database     
+    restart: unless-stopped
+
+volumes:
+  tona-db-data:

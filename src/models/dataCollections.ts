@@ -1,0 +1,6 @@
+export enum DataCollections {
+  STATS_MESSAGES = "STATS_MESSAGES",
+  CHANNELS_CONFIG = "CHANNELS_CONFIG",
+  WEEKS = "WEEKS",
+  USERS = "USERS",
+}
