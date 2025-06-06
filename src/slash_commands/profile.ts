@@ -33,11 +33,9 @@ export const command: SlashCommand = {
             .setDescription(`
             **Prénom:** ${user.first_name}
             **Nom:** ${user.last_name}
-            **Date de naissance:** ${new Date(
-              user.birthdate
-            ).getDate()}/${new Date(user.birthdate).getMonth()}/${new Date(
-            user.birthdate
-          ).getFullYear()}
+            **Date de naissance:** ${new Date(user.birthdate).getDate()}/${
+            new Date(user.birthdate).getMonth() + 1
+          }/${new Date(user.birthdate).getFullYear()}
             **Age:** ${Math.floor(
               (new Date().getTime() - new Date(user.birthdate).getTime()) /
                 1000 /
