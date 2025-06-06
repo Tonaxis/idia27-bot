@@ -1,5 +1,6 @@
 export const DATA_COLLECTION_CHANNELS_CONFIG_KEYS = [
   "ATTENDANCES_RECORD_MANAGER",
+  "BIRTHDAYS",
 ] as const;
 
 export type DataCollectionChannelsConfigKey =

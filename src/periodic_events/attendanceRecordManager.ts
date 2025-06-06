@@ -70,7 +70,7 @@ const event: PeriodicEvent = {
           ],
         });
 
-        if (!currentDataUser?.discord_id) return;
+        if (!currentDataUser?.discord_id || !currentDataUser?.mp) return;
         client.users.fetch(currentDataUser?.discord_id).then((user) => {
           user
             .send({

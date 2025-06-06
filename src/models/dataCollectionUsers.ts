@@ -3,4 +3,6 @@ export type DataCollectionUsers = {
   discord_id?: string;
   first_name: string;
   last_name: string;
+  birthdate: string;
+  mp: boolean;
 };
