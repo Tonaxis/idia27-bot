@@ -39,7 +39,7 @@ const event: PeriodicEvent = {
     const nextDataUsers = usersCol.get((u) => listOfUids.includes(u.uid));
 
     db.collection<DataCollectionChannelsConfig>(DataCollections.CHANNELS_CONFIG)
-      .get()
+      .get({ key: "ATTENDANCES_RECORD_MANAGER" })
       .forEach((channel) => {
         (client.channels.cache.get(channel.channelId) as TextChannel)?.send({
           content: currentDataUser.discord_id

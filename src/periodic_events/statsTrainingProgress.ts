@@ -12,10 +12,8 @@ const event: PeriodicEvent = {
   executeBefore: true,
   execute(date: Date, client: Client) {
     db.collection<DataCollectionStatsMessages>(DataCollections.STATS_MESSAGES)
-      .get()
+      .get({ type: "TRAINING_PROGRESS" })
       .forEach((data) => {
-        if (data.type !== "TRAINING_PROGRESS") return;
-
         const channel = client.channels.cache.get(
           data.channelId
         ) as TextChannel;
