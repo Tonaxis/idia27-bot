@@ -8,9 +8,10 @@ export default (...args: any) => {
   const currentWeek = getWeekNumber(new Date());
 
   const collection = db.collection<DataCollectionWeeks>(DataCollections.WEEKS);
+
   const remainings = collection.get(
     (w) =>
-      (w.year === currentYear && w.week > currentWeek) || w.year >= currentYear
+      (w.year === currentYear && w.week > currentWeek) || w.year > currentYear
   ).length;
 
   return {

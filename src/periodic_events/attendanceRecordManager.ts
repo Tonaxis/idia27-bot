@@ -25,8 +25,12 @@ const event: PeriodicEvent = {
     const currentDataWeek = weeksCol.get({ year: year, week: week })[0];
 
     const nextDataWeek = weeksCol
-      .get((y) => y.year === year && y.week > week)
-      .sort((a, b) => a.year - b.year || a.week - b.week)
+      .get(
+        (y) =>
+          (y.year === year && y.week > week) ||
+          (y.year === year + 1 && y.week < week)
+      )
+      .sort((a, b) => a.year - b.year && a.week - b.week)
       .slice(0, 5);
 
     const currentDataUser = usersCol.get({

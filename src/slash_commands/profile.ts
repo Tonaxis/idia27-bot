@@ -5,7 +5,13 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import db from "tona-db-mini";
-import { DataCollections, DataCollectionUsers, SlashCommand } from "../models";
+import {
+  DataCollections,
+  DataCollectionUsers,
+  DataCollectionWeeks,
+  SlashCommand,
+} from "../models";
+import { getWeekNumber } from "../utils/date";
 
 export const command: SlashCommand = {
   name: "profile",
@@ -21,11 +27,27 @@ export const command: SlashCommand = {
 
       if (userId === undefined) userId = interaction.user.id;
 
-      const collection = db.collection<DataCollectionUsers>(
+      const userCollection = db.collection<DataCollectionUsers>(
         DataCollections.USERS
       );
 
-      const user = collection.get({ discord_id: userId })[0];
+      const weeksCollection = db.collection<DataCollectionWeeks>(
+        DataCollections.WEEKS
+      );
+
+      const currentYear = new Date().getFullYear();
+      const currentWeek = getWeekNumber(new Date());
+
+      const user = userCollection.get({ discord_id: userId })[0];
+
+      const week = weeksCollection
+        .get(
+          (w) =>
+            w.attendances_record_manager_uid === user.uid &&
+            ((w.year === currentYear && w.week > currentWeek) ||
+              w.year > currentYear)
+        )
+        .sort((a, b) => a.year - b.year && a.week - b.week)[0];
 
       await interaction.reply({
         embeds: [
@@ -44,7 +66,13 @@ export const command: SlashCommand = {
                 24 /
                 365
             )}
-            **Alertes MP:** ${user.mp ? "Oui" : "Non"}  
+            **Alertes MP:** ${user.mp ? "Oui" : "Non"}
+            **Prochain tour pour la fiche de présence:**
+            > ${
+              week
+                ? `Semaine ${week.week} de ${week.year}`
+                : "Pas encore disponible"
+            }
             `),
         ],
       });
