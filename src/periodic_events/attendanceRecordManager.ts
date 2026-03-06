@@ -34,8 +34,6 @@ const event: PeriodicEvent = {
       .sort((a, b) => a.year - b.year && a.week - b.week)
       .slice(0, 5);
 
-    console.log("nextDataWeek\n", nextDataWeek);
-
     const currentDataUser = usersCol.get({
       uid: currentDataWeek?.attendances_record_manager_uid,
     })[0];
@@ -77,20 +75,20 @@ const event: PeriodicEvent = {
           ],
         });
 
-        // if (!currentDataUser?.discord_id || !currentDataUser?.mp) return;
-        // client.users.fetch(currentDataUser?.discord_id).then((user) => {
-        //   user
-        //     .send({
-        //       embeds: [
-        //         new EmbedBuilder()
-        //           .setTitle(`Fiche de presences`)
-        //           .setDescription(
-        //             `Hey ! **${currentDataUser.first_name}**,\nC'est à ton tour de d'occuper de la fiche de presences cette semaine !`,
-        //           ),
-        //       ],
-        //     })
-        //     .catch((error) => console.error(error?.message || error));
-        // });
+        if (!currentDataUser?.discord_id || !currentDataUser?.mp) return;
+        client.users.fetch(currentDataUser?.discord_id).then((user) => {
+          user
+            .send({
+              embeds: [
+                new EmbedBuilder()
+                  .setTitle(`Fiche de presences`)
+                  .setDescription(
+                    `Hey ! **${currentDataUser.first_name}**,\nC'est à ton tour de d'occuper de la fiche de presences cette semaine !`,
+                  ),
+              ],
+            })
+            .catch((error) => console.error(error?.message || error));
+        });
       });
   },
 };
