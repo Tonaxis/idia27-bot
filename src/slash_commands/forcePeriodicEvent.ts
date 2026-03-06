@@ -2,11 +2,11 @@ import {
   CommandInteraction,
   EmbedBuilder,
   MessageFlags,
-  resolveColor,
   SlashCommandBuilder,
 } from "discord.js";
 import { SlashCommand } from "../models";
 import { periodicEvents } from "../singletons";
+import { safeReplyError } from "../utils/interaction";
 
 export const command: SlashCommand = {
   name: "force_periodic_event",
@@ -26,28 +26,24 @@ export const command: SlashCommand = {
     ),
   execute: async (interaction: CommandInteraction) => {
     try {
+      await interaction.deferReply({
+        flags: MessageFlags.Ephemeral,
+      });
+
       const event = interaction.options.get("event")?.value?.toString();
       if (!event) throw new Error("event is required");
 
-      periodicEvents.get(event)?.execute(new Date(), interaction.client);
+      await periodicEvents.get(event)?.execute(new Date(), interaction.client);
 
-      await interaction.reply({
+      await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setTitle("Évènement exécuté")
             .setDescription(`> **Évènement**: \`\`${event}\`\``),
         ],
-        flags: MessageFlags.Ephemeral,
       });
     } catch (error) {
-      interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setTitle("Une erreur est survenue")
-            .setDescription(`${error}`)
-            .setColor(resolveColor("#FF0000")),
-        ],
-      });
+      await safeReplyError(interaction, error);
     }
   },
 };

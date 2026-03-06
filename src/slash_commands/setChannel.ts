@@ -1,7 +1,6 @@
 import {
   CommandInteraction,
   EmbedBuilder,
-  resolveColor,
   SlashCommandBuilder,
 } from "discord.js";
 import db from "tona-db-mini";
@@ -12,6 +11,7 @@ import {
   DataCollections,
   SlashCommand,
 } from "../models";
+import { safeReplyError } from "../utils/interaction";
 
 export const command: SlashCommand = {
   name: "set_channel",
@@ -111,14 +111,7 @@ export const command: SlashCommand = {
         ],
       });
     } catch (error) {
-      interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setTitle("Une erreur est survenue")
-            .setDescription(`${error}`)
-            .setColor(resolveColor("#FF0000")),
-        ],
-      });
+      await safeReplyError(interaction, error);
     }
   },
 };

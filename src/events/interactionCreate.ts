@@ -1,5 +1,6 @@
 import { Client, Events, Interaction } from "discord.js";
 import { BotEvent } from "../models";
+import { safeReplyError } from "../utils/interaction";
 
 const event: BotEvent = {
   name: Events.InteractionCreate,
@@ -12,10 +13,18 @@ const event: BotEvent = {
 
       if (!command) return;
 
-      await command.execute(interaction);
-      console.log(
-        `[EVENT:${this.name}] /${interaction.commandName} used by ${interaction.user.username}`
-      );
+      try {
+        await command.execute(interaction);
+        console.log(
+          `[EVENT:${this.name}] /${interaction.commandName} used by ${interaction.user.username}`
+        );
+      } catch (error) {
+        console.error(
+          `[EVENT:${this.name}] /${interaction.commandName} failed:`,
+          error
+        );
+        await safeReplyError(interaction, error);
+      }
     }
 
     if (interaction.isButton()) {
@@ -25,12 +34,20 @@ const event: BotEvent = {
 
       if (!buttonAction) return;
 
-      await buttonAction.execute(interaction);
-      console.log(
-        `[EVENT:${this.name}] button ${
-          interaction.customId.split(":")[0]
-        } pressed by ${interaction.user.username}`
-      );
+      try {
+        await buttonAction.execute(interaction);
+        console.log(
+          `[EVENT:${this.name}] button ${
+            interaction.customId.split(":")[0]
+          } pressed by ${interaction.user.username}`
+        );
+      } catch (error) {
+        console.error(
+          `[EVENT:${this.name}] button ${interaction.customId.split(":")[0]} failed:`,
+          error
+        );
+        await safeReplyError(interaction, error);
+      }
     }
   },
 };

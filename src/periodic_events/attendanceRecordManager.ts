@@ -27,18 +27,21 @@ const event: PeriodicEvent = {
     const nextDataWeek = weeksCol
       .get(
         (y) =>
-          (y.year === year && y.week > week) ||
-          (y.year === year + 1 && y.week < week)
+          ((y.year === year && y.week > week) ||
+            (y.year === year + 1 && y.week < week)) &&
+          y.attendances_record_manager_uid !== undefined,
       )
       .sort((a, b) => a.year - b.year && a.week - b.week)
       .slice(0, 5);
+
+    console.log("nextDataWeek\n", nextDataWeek);
 
     const currentDataUser = usersCol.get({
       uid: currentDataWeek?.attendances_record_manager_uid,
     })[0];
 
     const listOfUids = nextDataWeek.map(
-      (week) => week.attendances_record_manager_uid
+      (week) => week.attendances_record_manager_uid,
     );
     const nextDataUsers = usersCol.get((u) => listOfUids.includes(u.uid));
 
@@ -61,7 +64,7 @@ const event: PeriodicEvent = {
                 }\n\n### Semaines suivantes:\n ${nextDataWeek
                   ?.map((w) => {
                     const user = nextDataUsers.find(
-                      (u) => u.uid === w.attendances_record_manager_uid
+                      (u) => u.uid === w.attendances_record_manager_uid,
                     );
                     return `Semaine \`\`${w.week}\`\` > **${user?.first_name} ${
                       user?.last_name
@@ -69,25 +72,25 @@ const event: PeriodicEvent = {
                       user?.discord_id && `${` AKA <@${user?.discord_id}>`}`
                     }`;
                   })
-                  .join("\n")}`
+                  .join("\n")}`,
               ),
           ],
         });
 
-        if (!currentDataUser?.discord_id || !currentDataUser?.mp) return;
-        client.users.fetch(currentDataUser?.discord_id).then((user) => {
-          user
-            .send({
-              embeds: [
-                new EmbedBuilder()
-                  .setTitle(`Fiche de presences`)
-                  .setDescription(
-                    `Hey ! **${currentDataUser.first_name}**,\nC'est à ton tour de d'occuper de la fiche de presences cette semaine !`
-                  ),
-              ],
-            })
-            .catch((error) => console.error(error?.message || error));
-        });
+        // if (!currentDataUser?.discord_id || !currentDataUser?.mp) return;
+        // client.users.fetch(currentDataUser?.discord_id).then((user) => {
+        //   user
+        //     .send({
+        //       embeds: [
+        //         new EmbedBuilder()
+        //           .setTitle(`Fiche de presences`)
+        //           .setDescription(
+        //             `Hey ! **${currentDataUser.first_name}**,\nC'est à ton tour de d'occuper de la fiche de presences cette semaine !`,
+        //           ),
+        //       ],
+        //     })
+        //     .catch((error) => console.error(error?.message || error));
+        // });
       });
   },
 };

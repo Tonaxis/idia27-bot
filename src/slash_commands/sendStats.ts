@@ -1,9 +1,7 @@
 import {
   CommandInteraction,
-  EmbedBuilder,
   InteractionReplyOptions,
   MessagePayload,
-  resolveColor,
   SlashCommandBuilder,
 } from "discord.js";
 import db from "tona-db-mini";
@@ -15,6 +13,7 @@ import {
   DataCollectionStatsMessages,
   DataCollectionStatsMessagesType,
 } from "../models/dataCollectionStatsMessages";
+import { safeReplyError } from "../utils/interaction";
 
 export const command: SlashCommand = {
   name: "send_stats",
@@ -75,14 +74,7 @@ export const command: SlashCommand = {
         });
       }
     } catch (error) {
-      interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setTitle("Une erreur est survenue")
-            .setDescription(`${error}`)
-            .setColor(resolveColor("#FF0000")),
-        ],
-      });
+      await safeReplyError(interaction, error);
     }
   },
 };
