@@ -54,14 +54,15 @@ const event: PeriodicEvent = {
               .setTitle(`Responsable de la fiche de presences`)
               .setDescription(
                 `${
-                  currentDataUser?.first_name &&
-                  `Semaine \`\`${week}\`\` > **${
-                    currentDataUser?.first_name ?? ''
-                  } ${currentDataUser?.last_name?.toUpperCase() ?? ''}**${
-                    currentDataUser?.discord_id &&
-                    ` AKA <@${currentDataUser?.discord_id}>`
-                  }`
-                }\n\n### Semaines suivantes:\n ${nextDataWeek
+                  currentDataUser?.first_name
+                    ? `Semaine \`\`${week}\`\` > **${
+                        currentDataUser?.first_name ?? ''
+                      } ${currentDataUser?.last_name?.toUpperCase() ?? ''}**${
+                        currentDataUser?.discord_id &&
+                        ` AKA <@${currentDataUser?.discord_id}>`
+                      }\n\n`
+                    : ''
+                }### Semaines suivantes:\n ${nextDataWeek
                   ?.map((w) => {
                     const user = nextDataUsers.find(
                       (u) => u.uid === w.attendances_record_manager_uid,
