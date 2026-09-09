@@ -55,8 +55,8 @@ const event: PeriodicEvent = {
               .setTitle(`Responsable de la fiche de presences`)
               .setDescription(
                 `Semaine \`\`${week}\`\` > **${
-                  currentDataUser.first_name
-                } ${currentDataUser.last_name.toUpperCase()}**${
+                  currentDataUser?.first_name ?? 'Personne'
+                } ${currentDataUser?.last_name?.toUpperCase() ?? ''}**${
                   currentDataUser?.discord_id &&
                   ` AKA <@${currentDataUser?.discord_id}>`
                 }\n\n### Semaines suivantes:\n ${nextDataWeek
