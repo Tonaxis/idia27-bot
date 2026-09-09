@@ -1,18 +1,18 @@
-import { Client, EmbedBuilder, TextChannel } from "discord.js";
-import db from "tona-db-mini";
+import { Client, EmbedBuilder, TextChannel } from 'discord.js';
+import db from 'tona-db-mini';
 import {
   DataCollectionChannelsConfig,
   DataCollections,
   DataCollectionUsers,
   DataCollectionWeeks,
   PeriodicEvent,
-} from "../models";
-import { getWeekNumber } from "../utils/date";
+} from '../models';
+import { getWeekNumber } from '../utils/date';
 
 const event: PeriodicEvent = {
-  name: "attendanceRecordManager",
-  trigger: "ON",
-  cycle: "WEEKS",
+  name: 'attendanceRecordManager',
+  trigger: 'ON',
+  cycle: 'WEEKS',
   offset: 0,
   executeBefore: false,
   execute(date: Date, client: Client) {
@@ -44,12 +44,12 @@ const event: PeriodicEvent = {
     const nextDataUsers = usersCol.get((u) => listOfUids.includes(u.uid));
 
     db.collection<DataCollectionChannelsConfig>(DataCollections.CHANNELS_CONFIG)
-      .get({ key: "ATTENDANCES_RECORD_MANAGER" })
+      .get({ key: 'ATTENDANCES_RECORD_MANAGER' })
       .forEach((channel) => {
         (client.channels.cache.get(channel.channelId) as TextChannel)?.send({
-          content: currentDataUser.discord_id
-            ? `<@${currentDataUser.discord_id}>`
-            : "``id discord non renseigné``",
+          content: currentDataUser?.discord_id
+            ? `<@${currentDataUser?.discord_id}>`
+            : '``id discord non renseigné``',
           embeds: [
             new EmbedBuilder()
               .setTitle(`Responsable de la fiche de presences`)
@@ -57,8 +57,8 @@ const event: PeriodicEvent = {
                 `Semaine \`\`${week}\`\` > **${
                   currentDataUser.first_name
                 } ${currentDataUser.last_name.toUpperCase()}**${
-                  currentDataUser.discord_id &&
-                  ` AKA <@${currentDataUser.discord_id}>`
+                  currentDataUser?.discord_id &&
+                  ` AKA <@${currentDataUser?.discord_id}>`
                 }\n\n### Semaines suivantes:\n ${nextDataWeek
                   ?.map((w) => {
                     const user = nextDataUsers.find(
@@ -70,7 +70,7 @@ const event: PeriodicEvent = {
                       user?.discord_id && `${` AKA <@${user?.discord_id}>`}`
                     }`;
                   })
-                  .join("\n")}`,
+                  .join('\n')}`,
               ),
           ],
         });
