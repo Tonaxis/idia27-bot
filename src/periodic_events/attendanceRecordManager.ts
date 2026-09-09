@@ -27,11 +27,10 @@ const event: PeriodicEvent = {
     const nextDataWeek = weeksCol
       .get(
         (y) =>
-          ((y.year === year && y.week > week) ||
-            (y.year === year + 1 && y.week < week)) &&
+          (y.year > year || (y.year === year && y.week > week)) &&
           y.attendances_record_manager_uid !== undefined,
       )
-      .sort((a, b) => a.year - b.year && a.week - b.week)
+      .sort((a, b) => a.year - b.year || a.week - b.week)
       .slice(0, 5);
 
     const currentDataUser = usersCol.get({
@@ -54,11 +53,14 @@ const event: PeriodicEvent = {
             new EmbedBuilder()
               .setTitle(`Responsable de la fiche de presences`)
               .setDescription(
-                `Semaine \`\`${week}\`\` > **${
-                  currentDataUser?.first_name ?? 'Personne'
-                } ${currentDataUser?.last_name?.toUpperCase() ?? ''}**${
-                  currentDataUser?.discord_id &&
-                  ` AKA <@${currentDataUser?.discord_id}>`
+                `${
+                  currentDataUser?.first_name &&
+                  `Semaine \`\`${week}\`\` > **${
+                    currentDataUser?.first_name ?? ''
+                  } ${currentDataUser?.last_name?.toUpperCase() ?? ''}**${
+                    currentDataUser?.discord_id &&
+                    ` AKA <@${currentDataUser?.discord_id}>`
+                  }`
                 }\n\n### Semaines suivantes:\n ${nextDataWeek
                   ?.map((w) => {
                     const user = nextDataUsers.find(
